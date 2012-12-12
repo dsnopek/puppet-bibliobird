@@ -19,9 +19,11 @@ class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6',
     $branch = 'master'
   }
   
-  Vcsrepo {
-    owner => $aegir_user,
-    group => $aegir_user,
+  package {'git':
+    ensure => present,
+  }
+
+  Bibliobird::Git {
     user  => $aegir_user,
   }
 
@@ -44,18 +46,14 @@ class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6',
       mode   => '0755',
     }
 
-    vcsrepo {"${aegir_root}/prj/bbcom":
-      ensure   => present,
-      provider => git,
-      source   => 'git://github.com/dsnopek/bbcom.git',
-      revision => $branch,
+    bibliobird::git {"${aegir_root}/prj/bbcom":
+      source => 'git://github.com/dsnopek/bbcom.git',
+      branch => $branch,
     }
 
-    vcsrepo {"${aegir_root}/prj/lingwo-old":
-      ensure   => present,
-      provider => git,
-      source   => 'git://github.com/dsnopek/lingwo-old.git',
-      revision => $branch,
+    bibliobird::git {"${aegir_root}/prj/lingwo-old":
+      source => 'git://github.com/dsnopek/lingwo-old.git',
+      branch => $branch,
     }
 
     file {"${aegir_root}/prj/bbcom/drupal/sites/all/modules/lingwo-old":
@@ -63,15 +61,13 @@ class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6',
       target  => "${aegir_root}/prj/lingwo-old",
       owner   => $aegir_user,
       group   => $aegir_user,
-      require => [ Vcsrepo["${aegir_root}/prj/bbcom"],
-                   Vcsrepo["${aegir_root}/prj/lingwo-old"] ],
+      require => [ Bibliobird::Git["${aegir_root}/prj/bbcom"],
+                   Bibliobird::Git["${aegir_root}/prj/lingwo-old"] ],
     }
 
-    vcsrepo {"${aegir_root}/prj/lingwo":
-      ensure   => present,
-      provider => git,
-      source   => 'git://github.com/dsnopek/lingwo.git',
-      revision => $branch,
+    bibliobird::git {"${aegir_root}/prj/lingwo":
+      source => 'git://github.com/dsnopek/lingwo.git',
+      branch => $branch,
     }
 
     file {"${aegir_root}/prj/bbcom/drupal/sites/all/modules/lingwo":
@@ -79,8 +75,8 @@ class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6',
       target  => "${aegir_root}/prj/lingwo",
       owner   => $aegir_user,
       group   => $aegir_user,
-      require => [ Vcsrepo["${aegir_root}/prj/bbcom"],
-                   Vcsrepo["${aegir_root}/prj/lingwo"] ],
+      require => [ Bibliobird::Git["${aegir_root}/prj/bbcom"],
+                   Bibliobird::Git["${aegir_root}/prj/lingwo"] ],
     }
 
     file {"${aegir_root}/platforms/${drupal6_platform}-${branch}":
@@ -89,7 +85,7 @@ class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6',
       owner   => $aegir_user,
       group   => $aegir_user,
       notify  => Aegir::Platform['bibliobird-drupal6-master'],
-      require => [ Vcsrepo["${aegir_root}/prj/bbcom"],
+      require => [ Bibliobird::Git["${aegir_root}/prj/bbcom"],
                    File["${aegir_root}/prj/bbcom/drupal/sites/all/modules/lingwo-old"],
                    File["${aegir_root}/prj/bbcom/drupal/sites/all/modules/lingwo"] ],
     }
