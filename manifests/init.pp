@@ -1,7 +1,5 @@
 
 class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6', $drupal7_platform = 'bibliobird') {
-  include aegir
-  include aegir::queue_runner
 
   # TODO: Replace with something like the code here: http://projects.puppetlabs.com/projects/1/wiki/Debian_Apache2_Recipe_Patterns
   #apache::mod {'headers': }
@@ -24,6 +22,14 @@ class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6',
   Vcsrepo {
     owner => $aegir_user,
     group => $aegir_user,
+    user  => $aegir_user,
+  }
+
+  Exec {
+    path        => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ],
+    user        => $aegir_user,
+    group       => $aegir_user,
+    environment => "HOME=${aegir_root}",
   }
 
   if $drupal6_platform {
@@ -101,9 +107,11 @@ class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6',
     # Using Drush makefile
     aegir::platform {"${drupal7_platform}-${branch}":
       makefile      => 'https://raw.github.com/dsnopek/bibliobird/master/build-bibliobird.make',
-	  working_copy  => true,
-	  build_timeout => '600',
+      working_copy  => true,
+      build_timeout => '600',
     }
   }
+
+
 }
 
