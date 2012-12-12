@@ -44,5 +44,21 @@ class bibliobird::devtools {
     cwd     => "${bibliobird::aegir_root}",
     unless  => "cat ${bibliobird::aegir_root}/.vimrc | grep '^call pathogen#infect(.${bibliobird::aegir_root}/.drush/vimrc/bundle.)$'",
   }
+
+  # Install some helpful script
+  file {"${bibliobird::aegir_root}/scripts":
+    ensure => directory,
+    owner  => $bibliobird::aegir_user,
+    group  => $bibliobird::aegir_user,
+    mode   => '0755',
+  }
+
+  file {"${bibliobird::aegir_root}/scripts/setup-nlp.php":
+    ensure => file,
+    source => 'puppet:///modules/bibliobird/setup-nlp.php',
+    owner  => $bibliobird::aegir_user,
+    group  => $bibliobird::aegir_user,
+    mode   => '0644',
+  }
 }
 
