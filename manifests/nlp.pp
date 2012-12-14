@@ -47,11 +47,9 @@ class bibliobird::nlp {
   }
 
   # Install the 'punkt' data package
-  exec {"python -c \"import nltk; nltk.download('punkt')\"":
-    user    => $bibliobird::aegir_user,
-    cwd     => $bibliobird::aegir_root,
-    environment => [ "HOME=${bibliobird::aegir_root}" ],
-    creates => "${bibliobird::aegir_root}/nltk_data/tokenizers/punkt",
+  exec {"python -c \"import nltk; nltk.download('punkt', download_dir='/usr/share/nltk_data')\"":
+    user    => root,
+    creates => "/usr/share/nltk_data/tokenizers/punkt",
     require => Exec['pip install nltk'],
   }
 }
