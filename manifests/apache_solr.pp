@@ -36,8 +36,6 @@ class bibliobird::apache_solr_config {
 
   file {'/usr/share/solr/lib':
     ensure => directory,
-    owner  => 'jetty',
-    group  => 'jetty',
     require => Package['solr-jetty'],
   }
 
@@ -56,8 +54,6 @@ class bibliobird::apache_solr_config {
 
   file {'/usr/share/solr/lib/dhc-solr-plugins.jar':
     ensure => present,
-    owner  => 'jetty',
-    group  => 'jetty',
     source  => "puppet:///modules/bibliobird/solr/dhc-solr-plugins.jar",
     require => Package['solr-jetty'],
   }
