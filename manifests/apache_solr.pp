@@ -34,11 +34,6 @@ class bibliobird::apache_solr_config {
     require => Package['solr-jetty'],
   }
 
-  file {'/usr/share/solr/lib':
-    ensure => directory,
-    require => Package['solr-jetty'],
-  }
-
   file {'/usr/share/solr/solr.xml':
     ensure => present,
     owner  => 'jetty',
@@ -50,6 +45,11 @@ class bibliobird::apache_solr_config {
     # create it if it's absent -- NOT overwrite the file if it differs from the
     # original.
     replace => "no",
+  }
+
+  file {'/usr/share/solr/lib':
+    ensure => directory,
+    require => Package['solr-jetty'],
   }
 
   file {'/usr/share/solr/lib/dhc-solr-plugins.jar':
