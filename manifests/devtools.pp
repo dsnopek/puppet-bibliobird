@@ -20,6 +20,15 @@ class bibliobird::devtools {
     ensure => present,
   }
 
+  package {'screen':
+    ensure => present,
+  }
+
+  # We use this for the 'lingwo' README.txt and in the future maybe more docs...
+  package {'markdown':
+    ensure => present,
+  }
+
   # Set as default
   exec {'update-alternatives --set editor /usr/bin/vim.nox':
     path    => '/usr/bin:/usr/sbin',
