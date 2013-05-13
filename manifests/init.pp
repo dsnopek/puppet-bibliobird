@@ -1,11 +1,13 @@
 
-class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6', $drupal7_platform = 'bibliobird') {
+class bibliobird ($production = false, $drupal6_platform = 'bibliobird-drupal6', $drupal7_platform = 'bibliobird')
+  inherits mvpcreator::webserver::aegir_config
+{
 
   # TODO: Replace with something like the code here: http://projects.puppetlabs.com/projects/1/wiki/Debian_Apache2_Recipe_Patterns
   #apache::mod {'headers': }
 
   # Ensure that all of aegir happens first!
-  Class['aegir'] -> Class['bibliobird']
+  Class['mvpcreator::webserver'] -> Class['bibliobird']
 
   if ! $::aegir_root { $aegir_root = '/var/aegir' }
   else               { $aegir_root = $::aegir_root }
